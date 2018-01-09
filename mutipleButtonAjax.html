@@ -1,0 +1,131 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+
+  <style>
+    button{
+      height:50px;
+      width:100px;
+      color:white;
+      background:black;
+      margin:10px 10px 0 10px;
+    }
+    #buttonAdd{
+      margin-top:40px;
+    }
+    img{
+      margin-right:20px;
+      margin-top:20px;
+    }
+  </style>
+</head>
+<body>
+	<div id="button-show"></div>
+	
+
+	<form id="buttonAdd">
+		<label for="button-input">Add button here</label>
+		<input type="text" id="button-input">
+		<input type="button" id="add-button" value="Add button"><br>
+	</form>
+  <br>
+  <div id="image-show"></div><br>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+
+    $('form').on('submit', function(e){
+      e.preventDefault();
+    })
+
+
+  	let animals =["dog","cat","bird","snake","horse","pig","mouse","rabbit"];
+    let newAnimalName;
+
+  	for(let i =0; i<animals.length; i++)
+    {
+      		//looping as much as arry
+        	const animalButton = $("<button >" +animals[i]+ "</button>");
+        	//create name of animal button based on set array
+        	$("#button-show").append(animalButton);
+        	//display buttons 
+          console.log(animals[i]);
+	 }
+
+    //new button method
+
+ 
+  	$("button").on("click",function(){
+  	  $("#image-show").empty();
+  	 let animalName =$(this).text();
+
+
+    const queryURL ="https://api.giphy.com/v1/gifs/search?q=" +
+    animalName + "&api_key=dc6zaTOxFJmzC&limit=10";
+     
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+  	       }).done(function(response){
+  		        console.log(response);
+  	         	const result= response.data;
+  		
+  		for(let i=0; i<result.length; i++)
+  		{
+	  		const img = $("<img>");
+	  		const imageURL =result[i].images.fixed_height.url;
+       
+	  		
+	  		img.attr("src",imageURL);
+	  		img.attr("alt","button image");
+	  		$("#image-show").append(img);
+
+  		}
+  	});
+	});
+
+
+$("#add-button").on("click",function(event){
+           event.preventDefault();
+      
+           newAnimalName = $("#button-input").val().trim();
+           //getting string value from input text
+         
+           //create a new button which contains a button-input text
+           const newAnimalbutton=$("<button>"+newAnimalName+"</button>");
+           //create a button and give a string value which i got it from input text
+
+           //and push it to animals 
+           animals.push(newAnimalbutton);
+           //display (append) to button-show
+           $("#button-show").append(newAnimalbutton); 
+
+   $("button").on("click",function(){
+        $("#image-show").empty();
+        newAnimalName =$(this).text();
+        const queryURL ="https://api.giphy.com/v1/gifs/search?q=" +
+        newAnimalName + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+           $.ajax({
+              url:queryURL,
+              method:"GET"
+           }).done(function(response){
+            const resultAdd= response.data;
+            for(let i=0; i<resultAdd.length; i++)
+                {
+                  const img = $("<img>");
+                  const imageURL =resultAdd[i].images.fixed_height.url;
+                  
+                  img.attr("src",imageURL);
+                  img.attr("alt","button image");
+                  $("#image-show").append(img);
+
+                }
+           });
+         });
+ });
+       
+	</script>
+</body>
+</html>
